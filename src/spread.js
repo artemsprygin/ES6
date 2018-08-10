@@ -12,3 +12,12 @@ function add(x,y,z) {
 let numbers = [1,2,3];
 
 add(...numbers);
+
+function printNumbersInterval() {
+    var i=1;
+    var timeId = setInterval(() => {
+        console.log(i);
+        if (i==20) clearInterval(timeId);
+        i++;
+    },100)
+}
