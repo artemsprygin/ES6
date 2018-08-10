@@ -1,3 +1,3 @@
 # ES6
-Practice with ES6
-Source CodeDojo lessons
+Practice with ES6<br>
+Source: CodeDojo lessons
