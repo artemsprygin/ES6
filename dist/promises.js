@@ -70,30 +70,72 @@ function addMovieToList(movie) {
     movieList.appendChild(img);
 }
 
-function getData(url, done) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            var json = JSON.parse(xhr.response);
-            console.log(json);
-            done(json.Search);
-        } else {
-            console.error(xhr.statusText);
+function getData(url) {
+
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var json = JSON.parse(xhr.response);
+                // console.log(json);
+                // done(json.Search);
+                resolve(json.Search);
+            } else {
+                reject(xhr.statusText);
+            };
         };
-    };
 
-    xhr.onerror = function (error) {
-        console.error(error);
-    };
+        xhr.onerror = function (error) {
+            reject(error);
+        };
 
-    xhr.send();
+        xhr.send();
+    });
 }
 
-var search = 'spider man';
+var spiderman = getData('http://www.omdbapi.com/?apikey=730993d6&s=spider man');;
+var superman = getData('http://www.omdbapi.com/?apikey=730993d6&s=superman');
 
-getData('http://www.omdapi.com/?s=' + search, function (movies) {
-    movies.forEach(function (movie) {
-        addMovieToList(movie);
+spiderman.then(function (movies) {
+    return movies.forEach(function (movie) {
+        return addMovieToList(movie);
+    });
+});
+superman.then(function (movies) {
+    return movies.forEach(function (movie) {
+        return addMovieToList(movie);
+    });
+});
+
+// getData(`http://www.omdbapi.com/?apikey=730993d6&s=${search}`)
+//     .then(movies => 
+//         movies.forEach((movie) => 
+//             addMovieToList(movie)))
+
+function go(num) {
+    return new Promise(function (resolve, reject) {
+        var delay = Math.ceil(Math.random() * 3000);
+        console.log(delay);
+        setTimeout(function () {
+            if (delay > 2000) reject(num);else resolve(num), delay;
+        });
+    });
+}
+
+// let p1 = go(1);
+// let p2 = go(2);
+// let p3 = go(3);
+
+// Promise.race([p1,p2,p3])
+//     .then(value => {
+//         console.log(value);
+//     })
+//     .catch(error => 
+//         console.error(error))
+
+Promise.race([spiderman, superman]).then(function (movies) {
+    return movies.forEach(function (movie) {
+        return addMovieToList(movie);
     });
 });
